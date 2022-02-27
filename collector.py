@@ -33,9 +33,6 @@ def collect(passes: int = 1):
 def get_comments(posts):
     comments = []
     for post in posts:
-        # print("-------------------")
-        # print(post[0])
-        # print("======================")
         try:
             # print(post[1].text)
             btns = post[1].find_elements(
