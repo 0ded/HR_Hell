@@ -2,27 +2,40 @@ import selenium
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
+from selenium.webdriver.common.keys import Keys
 import json
 import re
 
-def collect():
-    browser = base_connect(
-        "https://www.linkedin.com/uas/login?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Ffeed%2Fhashtag%2F%3Fkeywords%3D%25D7%259B%25D7%2595%25D7%259C%25D7%2590%25D7%259C%25D7%2599%25D7%2599%25D7%25A7&fromSignIn=true&trk=cold_join_sign_in"
-        "=true&trk=cold_join_sign_in")
 
+def collect(passes: int = 1):
     details = get_details("./details.json")
+
+    browser = base_connect(details["search_url"])
+
     signin_steps(browser, '//*[@id="username"]', '//*[@id="password"]', details["username"], details["password"],
                  '/html/body/div/main/div[2]/div[1]/form/div[3]/button')
+    mails = []
+    sleep(0.5)
+    for j in range(passes):
+        webdriver.ActionChains(browser).key_down(Keys.PAGE_DOWN).perform()
+        sleep(0.1)
     posts = get_all_posts(browser)
-    get_comments(posts)
+    temp = get_comments(posts)
+    for mail in temp:
+        if mail[0] not in [i[0] for i in mails]:
+            mails.append(mail)
+
+    # mails = list(dict.fromkeys(mails))
+    print([i[0] for i in mails])
+    browser.close()
 
 
 def get_comments(posts):
     comments = []
     for post in posts:
-        print("-------------------")
-        print(post[0])
-        print("======================")
+        # print("-------------------")
+        # print(post[0])
+        # print("======================")
         try:
             # print(post[1].text)
             btns = post[1].find_elements(
@@ -37,17 +50,17 @@ def get_comments(posts):
         except selenium.common.exceptions.StaleElementReferenceException:
             pass
 
-        sleep(1)
+        sleep(0.2)
         for s in post[1].text.split():
             # print(s)
             if check_mail(s) is not None:
-                comments.append(s)
+                comments.append((s, post[1].text))
         # print(post[1].text)
-        print(comments)
-    return
+    return comments
+
 
 def get_all_posts(browser: webdriver):
-    sleep(1.5)
+    sleep(0.5)
     posts = browser.find_elements(By.CLASS_NAME, "relative")
     out = []
     for post in posts:

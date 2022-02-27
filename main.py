@@ -2,4 +2,4 @@ import collector
 
 
 if __name__ == '__main__':
-    collector.collect()
+    collector.collect(7)
