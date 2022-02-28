@@ -44,7 +44,8 @@ def get_comments(posts):
 
         except selenium.common.exceptions.NoSuchElementException:
             print("=--=-=-=-=-=-=- Fail")
-        except selenium.common.exceptions.StaleElementReferenceException:
+        except selenium.common.exceptions.StaleElementReferenceException or \
+               selenium.common.exceptions.ElementClickInterceptedException:
             pass
 
         sleep(0.2)
