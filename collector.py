@@ -3,31 +3,42 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 from selenium.webdriver.common.keys import Keys
-from utils import get_json
+
+from utils import get_json, write_json
 import re
+
+details = get_json("./details.json")
+settings = get_json("./settings.json")
+
+
+def do_send():
+    pass
 
 
 def collect(passes: int = 1):
-    details = get_json("./details.json")
-
     browser = base_connect(details["search_url"])
 
-    signin_steps(browser, '//*[@id="username"]', '//*[@id="password"]', details["username"], details["password"],
-                 '/html/body/div/main/div[2]/div[1]/form/div[3]/button')
+    signin_steps(browser, settings["un_xpath"], settings["pw_xpath"], details["username"], details["password"],
+                 settings["si_btn_path"])
     mails = []
+
     sleep(0.5)
+
     for j in range(passes):
         webdriver.ActionChains(browser).key_down(Keys.PAGE_DOWN).perform()
         sleep(0.1)
+
     posts = get_all_posts(browser)
     temp = get_comments(posts)
+    browser.close()
+
     for mail in temp:
         if mail[0] not in [i[0] for i in mails]:
             mails.append(mail)
-
     # mails = list(dict.fromkeys(mails))
-    print([i[0] for i in mails])
-    browser.close()
+    print("fetched: ", [i[0] for i in mails])
+    details["mails_fetched"] = [i[0] for i in mails]
+    write_json("./details.json", details)
 
 
 def get_comments(posts):
