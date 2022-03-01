@@ -3,12 +3,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 from selenium.webdriver.common.keys import Keys
-import json
+from utils import get_json
 import re
 
 
 def collect(passes: int = 1):
-    details = get_details("./details.json")
+    details = get_json("./details.json")
 
     browser = base_connect(details["search_url"])
 
@@ -92,14 +92,8 @@ def signin_steps(browser: webdriver, username_xpath, password_xpath, username, p
     pw.find_element(By.XPATH, button_xpath).click()
 
 
-def get_details(json_path) -> dict:
-    f = open(json_path, "r")
-    s = json.load(f)
-    f.close()
-    return s
-
-
 def check_mail(string):
-    if (re.fullmatch('\S+@\S+', string)):
+    if (re.fullmatch('\S+@\S+', string)) and \
+            string not in get_json("./details.json")["mails_sent"]:
         return string
     return None

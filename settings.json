@@ -1,0 +1,9 @@
+{
+  "NOTICE!": "do not change stuff here, unless you want to break something",
+  "un_xpath": "//*[@id=\"username\"]",
+  "pw_xpath": "//*[@id=\"password\"]",
+  "si_btn_path": "/html/body/div/main/div[2]/div[1]/form/div[3]/button",
+  "sh_mail_handler": "",
+  "": "END"
+
+}
