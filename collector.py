@@ -4,15 +4,19 @@ from selenium.webdriver.common.by import By
 from time import sleep
 from selenium.webdriver.common.keys import Keys
 
+import mailing
 from utils import get_json, write_json
 import re
 
 details = get_json("./details.json")
 settings = get_json("./settings.json")
+message = get_json("./message.json")
 
 
 def do_send():
-    pass
+    for i in details["mails_fetched"]:
+        mailing.fake_send(message["subject"], i, message["message"], (details["gmail"], details["gmail_password"])
+                          ["./resume.pdf"])
 
 
 def collect(passes: int = 1):
