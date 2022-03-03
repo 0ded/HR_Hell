@@ -21,6 +21,11 @@ job applications.
   "search_url": Search url here,
   "attached_pdf": An array of all the files you wish to add to the mail
 ```
+- In message.json change:
+```json
+  "subject": Mail subject,
+  "message": Customized message - BE NICE!!
+```
 - Now you are ready to run
 
 ```bash
