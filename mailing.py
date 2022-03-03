@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate
 
+
 def connect(user, password):
     try:
         server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
@@ -15,7 +16,7 @@ def connect(user, password):
         print("Error connecting to gmail")
 
 
-def send_mail(subject, to_addr, text, user=("equaldegen@equaldegen.com", "degen_equality"), files=None):
+def send_mail(subject, to_addr, text, user=("gmail@address.com", "gmail_password"), files=None):
     try:
         if user[0].split("@")[1].split(".")[0] != "gmail":
             raise Exception("Gmail address was not specified")
