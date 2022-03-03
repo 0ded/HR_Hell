@@ -14,15 +14,22 @@ message = get_json("./message.json")
 
 
 def do_send():
-    for i in details["mails_fetched"]:
-        mailing.fake_send(message["subject"], i, message["message"], (details["gmail"], details["gmail_password"])
-                          ["./resume.pdf"])
+    print("sending mails:\n")
+    while len(details["mails_fetched"]) != 0:
+        print(len(details["mails_fetched"]), "left")
+        i = details["mails_fetched"][0]
+        if i not in details["mails_sent"]:
+            mailing.safe_send_mail(message["subject"], i, message["message"], (details["gmail"], details["gmail_password"]), details["attached_pdf"])
+            details["mails_sent"].append(i)
+            pass
+        details["mails_fetched"].remove(i)
+    write_json("./details.json", details)
 
 
 def collect(passes: int = 1):
     browser = base_connect(details["search_url"])
 
-    signin_steps(browser, settings["un_xpath"], settings["pw_xpath"], details["username"], details["password"],
+    signin_steps(browser, settings["un_xpath"], settings["pw_xpath"], details["li_username"], details["li_password"],
                  settings["si_btn_path"])
     mails = []
 
@@ -41,13 +48,14 @@ def collect(passes: int = 1):
             mails.append(mail)
     # mails = list(dict.fromkeys(mails))
     print("fetched: ", [i[0] for i in mails])
-    details["mails_fetched"] = [i[0] for i in mails]
+    details["mails_fetched"].extend([i[0] for i in mails])
     write_json("./details.json", details)
 
 
 def get_comments(posts):
     comments = []
-    for post in posts:
+    for i, post in enumerate(posts):
+        print("collecting mails:",  "{}/{}".format(i, len(posts)))
         try:
             # print(post[1].text)
             btns = post[1].find_elements(
@@ -69,6 +77,7 @@ def get_comments(posts):
             if check_mail(s) is not None:
                 comments.append((s, post[1].text))
         # print(post[1].text)
+        print("found:", len(comments))
     return comments
 
 
@@ -107,8 +116,10 @@ def signin_steps(browser: webdriver, username_xpath, password_xpath, username, p
     pw.find_element(By.XPATH, button_xpath).click()
 
 
-def check_mail(string):
+def check_mail(string: str):
     if (re.fullmatch('\S+@\S+', string)) and \
             string not in get_json("./details.json")["mails_sent"]:
+        if ":" in string:
+            string = string.split(":")[1]
         return string
     return None
