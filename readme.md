@@ -35,6 +35,7 @@ python main.py
 - Make sure the "Less secure apps" option in your google account is on
   (more info can be found [here](https://www.dev2qa.com/how-do-i-enable-less-secure-apps-on-gmail/))
 - The url **must be a linkedin sign-in page.** i.e, must look like this:
-[signin page](/img.png)
+
+![signin page](/img.png)
 
 
