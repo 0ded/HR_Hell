@@ -48,6 +48,13 @@ def send_mail(subject, to_addr, text, user=("equaldegen@equaldegen.com", "degen_
         print("Error sending mail")
 
 
-def fake_send(subject, to_addr, text, user=("equaldegen@equaldegen.com", "degen_equality"), files=None):
-    # for testing
+def safe_send_mail(subject, to_addr, text, user=("gmail@address.com", "gmail_password"), files=None):
+    print(subject, "\n\n" + text, "\n\nto: ", to_addr, " from: ", user[0], " ", files, "\n-------\n\n", "send mail? (y/n)")
+    if input() == "y":
+        send_mail(subject, to_addr, text, user, files)
+
+
+def fake_send(subject, to_addr, text, user=("gmail@address.com", "gmail_password"), files=None):
+    # for debugging
+    # print(subject, "\n\n" + text, "\n\nto: ", to_addr, " from: ", user[0], " ", files, "-------\n\n")
     send_mail(subject, user[0], text, user, files)
