@@ -11,6 +11,7 @@ import re
 details = get_json("./details.json")
 settings = get_json("./settings.json")
 message = get_json("./message.json")
+white_words = get_json("./words_that_indicate_someone_is_looking_for_work.json")["words"]
 
 
 def do_send():
@@ -21,7 +22,6 @@ def do_send():
         if i not in details["mails_sent"]:
             mailing.safe_send_mail(message["subject"], i, message["message"], (details["gmail"], details["gmail_password"]), details["attached_pdf"])
             details["mails_sent"].append(i)
-            pass
         details["mails_fetched"].remove(i)
     write_json("./details.json", details)
 
