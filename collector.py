@@ -14,19 +14,28 @@ message = get_json("./message.json")
 white_words = get_json("./words_that_indicate_someone_is_looking_for_work.json")["words"]
 
 
-def do_send():
+def do_send(flags: dict):
     print("sending mails:\n")
     while len(details["mails_fetched"]) != 0:
         print(len(details["mails_fetched"]), "left")
         i = details["mails_fetched"][0]
         if i not in details["mails_sent"]:
-            mailing.safe_send_mail(message["subject"], i, message["message"], (details["gmail"], details["gmail_password"]), details["attached_pdf"])
+            if flags["fake_send"]:
+                mailing.fake_send(message["subject"], i, message["message"],
+                                       (details["gmail"], details["gmail_password"]), details["attached_pdf"])
+                return 0
+            if flags["immediate_send"]:
+                mailing.send_mail(message["subject"], i, message["message"],
+                                  (details["gmail"], details["gmail_password"]), details["attached_pdf"])
+
+            else:
+                mailing.safe_send_mail(message["subject"], i, message["message"], (details["gmail"], details["gmail_password"]), details["attached_pdf"])
             details["mails_sent"].append(i)
-        details["mails_fetched"].remove(i)
+            details["mails_fetched"].remove(i)
     write_json("./details.json", details)
 
 
-def collect(passes: int = 1):
+def collect(passes: int = 1, flags: dict = {}):
     browser = base_connect(details["search_url"])
 
     signin_steps(browser, settings["un_xpath"], settings["pw_xpath"], details["li_username"], details["li_password"],

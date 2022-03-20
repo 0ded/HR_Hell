@@ -17,5 +17,6 @@ def get_flags():
 
 if __name__ == '__main__':
     flags = get_flags()
-    collector.collect(6)
-    collector.do_send()
+    # print(flags)
+    collector.collect(7, flags)
+    collector.do_send(flags)
