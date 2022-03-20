@@ -31,6 +31,17 @@ job applications.
 ```bash
 python main.py
 ```
+### supported FLAGS
+
+Send mail immediately:
+```bash
+python main.py -i
+```
+
+Send mail to yourself:
+```bash
+python main.py -fs
+```
 
 ## IMPORTANT!!
 
@@ -42,8 +53,3 @@ python main.py
 - The url **must be a linkedin sign-in page.** i.e, must look like this:
 
 ![signin page](/img.png)
-
-
-## flags
-
-todo
