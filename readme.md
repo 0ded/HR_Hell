@@ -44,3 +44,6 @@ python main.py
 ![signin page](/img.png)
 
 
+## flags
+
+todo
