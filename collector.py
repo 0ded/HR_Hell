@@ -23,15 +23,15 @@ def do_send(flags: dict):
             if flags["fake_send"]:
                 mailing.fake_send(message["subject"], i, message["message"],
                                        (details["gmail"], details["gmail_password"]), details["attached_pdf"])
-                return 0
             if flags["immediate_send"]:
                 mailing.send_mail(message["subject"], i, message["message"],
                                   (details["gmail"], details["gmail_password"]), details["attached_pdf"])
-
+                details["mails_sent"].append(i)
+                details["mails_fetched"].remove(i)
             else:
                 mailing.safe_send_mail(message["subject"], i, message["message"], (details["gmail"], details["gmail_password"]), details["attached_pdf"])
-            details["mails_sent"].append(i)
-            details["mails_fetched"].remove(i)
+                details["mails_sent"].append(i)
+                details["mails_fetched"].remove(i)
     write_json("./details.json", details)
 
 
