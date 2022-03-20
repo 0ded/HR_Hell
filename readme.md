@@ -31,7 +31,7 @@ job applications.
 ```bash
 python main.py
 ```
-### supported FLAGS
+### Supported Flags
 
 Send mail immediately:
 ```bash
