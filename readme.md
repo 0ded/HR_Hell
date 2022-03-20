@@ -45,7 +45,7 @@ python main.py -fs
 
 ## IMPORTANT!!
 
-- Must have python 3.6 or any newer version
+- Must have python 3.7 or any newer version
 - Must have selenium and re
 - You must use gmail, don't use your current employer mail address
 - Make sure the "Less secure apps" option in your google account is on
