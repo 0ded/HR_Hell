@@ -19,10 +19,7 @@ def do_send(flags: dict):
     while len(details["mails_fetched"]) != 0 and not flags["fake_send"]:
         print(len(details["mails_fetched"]), "left")
         i = details["mails_fetched"][0]
-        if i not in details["mails_sent"]:
-            if flags["fake_send"]:
-                mailing.fake_send(message["subject"], i, message["message"],
-                                       (details["gmail"], details["gmail_password"]), details["attached_pdf"])
+        if i not in [j.lower() for j in details["mails_sent"]]:
             if flags["immediate_send"]:
                 mailing.send_mail(message["subject"], i, message["message"],
                                   (details["gmail"], details["gmail_password"]), details["attached_pdf"])
@@ -61,7 +58,7 @@ def collect(passes: int = 1, flags: dict = {}):
             mails.append(mail)
     # mails = list(dict.fromkeys(mails))
     print("fetched: ", [i[0] for i in mails])
-    details["mails_fetched"].extend([i[0] for i in mails])
+    details["mails_fetched"].extend([i[0].lower for i in mails])
     write_json("./details.json", details)
 
 
