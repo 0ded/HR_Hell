@@ -38,7 +38,7 @@ python main.py
 - **-fs** : ~~Send mail to yourself~~ Print mail content without sending
 - **-s** : Just send previously fetched mails
 - **-c** : Just fetch new mails
-- **-p** : number of passes to perform on the web page (higher numbers = slower with more results)
+- **-p** : number of passes to perform on the web page, higher numbers = slower with more results
 
 
 ## IMPORTANT!!
