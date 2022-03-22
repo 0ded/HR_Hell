@@ -17,7 +17,7 @@ def get_flags():
         elif arg == "-s":
             out["send"] = True
         elif arg == "-p":
-            out["pass"] = args[idx+1]
+            out["pass"] = int(args[idx+1])
     return out
 
 
