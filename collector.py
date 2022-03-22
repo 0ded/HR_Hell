@@ -16,7 +16,7 @@ white_words = get_json("./words_that_indicate_someone_is_looking_for_work.json")
 
 def do_send(flags: dict):
     print("sending mails:\n")
-    while len(details["mails_fetched"]) != 0:
+    while len(details["mails_fetched"]) != 0 and not flags["fake_send"]:
         print(len(details["mails_fetched"]), "left")
         i = details["mails_fetched"][0]
         if i not in details["mails_sent"]:
@@ -32,6 +32,10 @@ def do_send(flags: dict):
                 mailing.safe_send_mail(message["subject"], i, message["message"], (details["gmail"], details["gmail_password"]), details["attached_pdf"])
                 details["mails_sent"].append(i)
                 details["mails_fetched"].remove(i)
+    if flags["fake_send"]:
+        for i in details["mails_fetched"]:
+            mailing.fake_send(message["subject"], i, message["message"],
+                              (details["gmail"], details["gmail_password"]), details["attached_pdf"])
     write_json("./details.json", details)
 
 
