@@ -33,15 +33,13 @@ python main.py
 ```
 ### Supported Flags
 
-Send mail immediately:
-```bash
-python main.py -i
-```
 
-Send mail to yourself:
-```bash
-python main.py -fs
-```
+- **-i** :  Send mail immediately
+- **-fs** : Send mail to yourself
+- **-s** : Just send previously fetched mails
+- **-c** : Just fetch new mails
+- **-p** : number of passes to perform on the web page (higher numbers = slower with more results)
+
 
 ## IMPORTANT!!
 
