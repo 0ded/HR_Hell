@@ -57,5 +57,5 @@ def safe_send_mail(subject, to_addr, text, user=("gmail@address.com", "gmail_pas
 
 def fake_send(subject, to_addr, text, user=("gmail@address.com", "gmail_password"), files=None):
     # for debugging
-    # print(subject, "\n\n" + text, "\n\nto: ", to_addr, " from: ", user[0], " ", files, "-------\n\n")
-    send_mail(subject, user[0], text, user, files)
+    print(subject, "\n\n" + text, "\n\nto: ", to_addr, " from: ", user[0], " ", files, "-------\n\n")
+    # send_mail(subject, user[0], text, user, files)
