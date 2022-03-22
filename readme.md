@@ -35,7 +35,7 @@ python main.py
 
 
 - **-i** :  Send mail immediately
-- **-fs** : Send mail to yourself
+- **-fs** : ~~Send mail to yourself~~ Print mail content without sending
 - **-s** : Just send previously fetched mails
 - **-c** : Just fetch new mails
 - **-p** : number of passes to perform on the web page (higher numbers = slower with more results)
