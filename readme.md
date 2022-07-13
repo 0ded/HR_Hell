@@ -17,10 +17,11 @@ job applications.
   "li_username": Your linkedin username or mail here,
   "li_password": Your linkedin password here,
   "gmail": Your gmail mail here,
-  "gmail_password": Your gmail password here,
+  "gmail_password": Your gmail password here (see link below),
   "search_url": Search url here,
   "attached_pdf": An array of all the files you wish to add to the mail
 ```
+**[more detailes about how to generate a propper gmail password](https://support.google.com/accounts/answer/185833?hl=en/)**
 - In message.json change:
 ```json
   "subject": Mail subject,

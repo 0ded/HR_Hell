@@ -47,18 +47,17 @@ def collect(passes: int = 1, flags: dict = {}):
 
     for j in range(passes):
         webdriver.ActionChains(browser).key_down(Keys.PAGE_DOWN).perform()
-        sleep(0.1)
+        sleep(0.3)
 
     posts = get_all_posts(browser)
     temp = get_comments(posts)
     browser.close()
-
     for mail in temp:
         if mail[0] not in [i[0] for i in mails]:
             mails.append(mail)
     # mails = list(dict.fromkeys(mails))
     print("fetched: ", [i[0] for i in mails])
-    details["mails_fetched"].extend([i[0].lower for i in mails])
+    details["mails_fetched"].extend([i[0] for i in mails])
     write_json("./details.json", details)
 
 
@@ -72,7 +71,7 @@ def get_comments(posts):
                 By.TAG_NAME,
                 "button")
             for btn in btns:
-                if "comments" in btn.text:
+                if "comments" in [i.lower() for i in btn.text.split()]:
                     btn.click()
 
         except selenium.common.exceptions.NoSuchElementException:
