@@ -29,6 +29,8 @@ def do_send(flags: dict):
                 mailing.safe_send_mail(message["subject"], i, message["message"], (details["gmail"], details["gmail_password"]), details["attached_pdf"])
                 details["mails_sent"].append(i)
                 details["mails_fetched"].remove(i)
+        else:
+            details["mails_fetched"].remove(i)
     if flags["fake_send"]:
         for i in details["mails_fetched"]:
             mailing.fake_send(message["subject"], i, message["message"],
