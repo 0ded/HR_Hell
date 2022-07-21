@@ -39,6 +39,10 @@ def do_send(flags: dict):
 
 
 def collect(passes: int = 1, flags: dict = {}):
+    if check_mail(flags["add"]):
+        details["mails_fetched"].extend([flags["add"]])
+        write_json("./details.json", details)
+        return
     browser = base_connect(details["search_url"])
 
     signin_steps(browser, settings["un_xpath"], settings["pw_xpath"], details["li_username"], details["li_password"],

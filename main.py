@@ -3,7 +3,8 @@ import sys
 
 
 def get_flags():
-    out = {"filter": False, "fake_send": False, "immediate_send": False, "collect": False, "send": False, "pass": 7}
+    out = {"filter": False, "fake_send": False, "immediate_send": False, "collect": False, "send": False, "pass": 7,
+           "add": ""}
     args = sys.argv[1:]
     for idx, arg in enumerate(args):
         if arg == "-f":
@@ -18,6 +19,8 @@ def get_flags():
             out["send"] = True
         elif arg == "-p":
             out["pass"] = int(args[idx+1])
+        elif arg == "--add":
+            out["add"] = args[idx+1]
     return out
 
 
