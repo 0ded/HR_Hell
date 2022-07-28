@@ -136,5 +136,6 @@ def check_mail(string: str):
             string not in get_json("./details.json")["mails_sent"]:
         if ":" in string:
             string = string.split(":")[1]
+        string = string.encode("ascii", "ignore").decode().replace(" ", "")
         return string
     return None
