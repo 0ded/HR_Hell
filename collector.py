@@ -3,6 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 from selenium.webdriver.common.keys import Keys
+from random import randint
+from prog_bar import bar
 
 import mailing
 from utils import get_json, write_json
@@ -16,10 +18,13 @@ white_words = get_json("./words_that_indicate_someone_is_looking_for_work.json")
 
 def do_send(flags: dict):
     print("sending mails:\n")
+    details["mails_fetched"] = list(set(details["mails_fetched"]))
+    details["mails_sent"] = list(set(details["mails_sent"]))
     while len(details["mails_fetched"]) != 0 and not flags["fake_send"]:
         print(len(details["mails_fetched"]), "left")
         i = details["mails_fetched"][0]
         if i not in [j.lower() for j in details["mails_sent"]]:
+            print("sending to: " + i)
             if flags["immediate_send"]:
                 mailing.send_mail(message["subject"], i, message["message"],
                                   (details["gmail"], details["gmail_password"]), details["attached_pdf"])
@@ -31,6 +36,8 @@ def do_send(flags: dict):
                 details["mails_fetched"].remove(i)
         else:
             details["mails_fetched"].remove(i)
+            print("canceled send, already in system")
+        write_json("./details.json", details)
     if flags["fake_send"]:
         for i in details["mails_fetched"]:
             mailing.fake_send(message["subject"], i, message["message"],
@@ -39,6 +46,9 @@ def do_send(flags: dict):
 
 
 def collect(passes: int = 1, flags: dict = {}):
+    details["mails_fetched"] = list(set(details["mails_fetched"]))
+    details["mails_sent"] = list(set(details["mails_sent"]))
+    write_json("./details.json", details)
     if check_mail(flags["add"]):
         details["mails_fetched"].extend([flags["add"]])
         write_json("./details.json", details)
@@ -50,35 +60,51 @@ def collect(passes: int = 1, flags: dict = {}):
     mails = []
 
     sleep(0.5)
+    nl = True
+    while flags["looping"] or nl:
+        if flags["looping"]:
+            passes = randint(2, passes)
+        for j in range(passes):
+            webdriver.ActionChains(browser).key_down(Keys.PAGE_DOWN).perform()
+            sleep(0.3)
 
-    for j in range(passes):
-        webdriver.ActionChains(browser).key_down(Keys.PAGE_DOWN).perform()
-        sleep(0.3)
+        posts = get_all_posts(browser)
+        temp = get_comments(posts)
 
-    posts = get_all_posts(browser)
-    temp = get_comments(posts)
-    browser.close()
-    for mail in temp:
-        if mail[0] not in [i[0] for i in mails]:
-            mails.append(mail)
-    # mails = list(dict.fromkeys(mails))
-    print("fetched: ", [i[0] for i in mails])
-    details["mails_fetched"].extend([i[0] for i in mails])
-    write_json("./details.json", details)
+        if not flags["looping"]:
+            browser.close()
+
+        for mail in temp:
+            if mail[0] not in [i[0] for i in mails]:
+                mails.append(mail)
+        # mails = list(dict.fromkeys(mails))
+        print("fetched: ", [i[0] for i in mails])
+        details["mails_fetched"].extend([i[0] for i in set(mails)])
+        write_json("./details.json", details)
+        nl = not nl
+
+        if flags["looping"] and not flags["collect"]:
+            do_send(flags)
 
 
 def get_comments(posts):
     comments = []
     for i, post in enumerate(posts):
-        print("collecting mails:",  "{}/{}".format(i, len(posts)))
+        print("collecting mails:",  "{}/{}".format(i, len(posts)), end="\r")
         try:
             # print(post[1].text)
             btns = post[1].find_elements(
                 By.TAG_NAME,
                 "button")
+            b = bar(len(btns) + len(post[1].text.split()))
             for btn in btns:
+                print("found: {:>3} {}".format(len(comments), b), end="\r")
+                b.add()
                 if "comments" in [i.lower() for i in btn.text.split()]:
-                    btn.click()
+                    try:
+                        btn.click()
+                    except:
+                        print("error clicking, skipping")
 
         except selenium.common.exceptions.NoSuchElementException:
             print("=--=-=-=-=-=-=- Fail")
@@ -88,11 +114,14 @@ def get_comments(posts):
 
         sleep(0.2)
         for s in post[1].text.split():
+            b.add()
+            print("found: {:>3} {}".format(len(comments), b), end="\r")
             # print(s)
             if check_mail(s) is not None:
                 comments.append((s, post[1].text))
         # print(post[1].text)
-        print("found:", len(comments))
+        # print("found:", len(comments))
+        # print(" ", end="\r")
     return comments
 
 
@@ -114,8 +143,9 @@ def get_all_posts(browser: webdriver):
 
 def base_connect(site):
     browser = webdriver.Firefox(executable_path='./geckodriver')
-    browser.maximize_window()
-    # browser.set_window_position(0, 0)
+    # browser.maximize_window()
+    browser.set_window_position(0, 0)
+
     sleep(0.2)
     browser.get(site)
     return browser
